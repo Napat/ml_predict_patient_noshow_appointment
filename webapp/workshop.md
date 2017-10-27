@@ -15,25 +15,31 @@
 
 
 Issue
+`Mungkorn`  
 1. [html, jQuery] Fix add form and improve add UI
 2. [DataTable] Add patient to datatable 
 3. [jQuery ajax, php, mysql] Add patient to db
 
-4. Add Edit form modal (UI only) with old data 
-5. save edited data into datatable
-6. save data to db
+`Pond`  
+4. [html, jQuery, bootstrap] Add Edit form modal (UI only) with old data 
+5. [DataTable] save edited data into datatable
+6. [jQuery ajax, php, mysql] save data to db
 
-7. del patient from datatable
-8. del patient from db
+`Mungkorn`  
+7. [DataTable] del patient from datatable
+8. [jQuery ajax, php, mysql] del patient from db
 
-9. Improve file structure
+`Pond`  
+9. [no] Improve file structure
 
-10. Search patient from db (UI)
-11. Search patient from db (backend process)
+`Pond`  
+10. [DataTable, jQuery ajax] Search box by patient age from db (UI)
+11. [php, mysql] Search patient from db (backend process)
 
-12. Select multiple checkbox in first column
-13. delete multiple
-14. Clear selected
+`Ton`  
+12. [DataTable] Select multiple checkbox in first column
+13. [DataTable] delete multiple from Datatable
+14. [jQuery ajax, php, mysql] delete multiple from DB
+15. Clear selected
 
-15.
-16.
+16. 
