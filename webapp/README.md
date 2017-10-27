@@ -4,6 +4,7 @@
 	edit in php.ini
 	- memory_limit=256M
 	- upload_max_filesize=20M
+	- post_max_size=20M
 
 	import forth_medical.sql
 		- wait ............
@@ -13,5 +14,3 @@
 
 ## DataTable doc
 	https://datatables.net/reference/api/
-
-	
