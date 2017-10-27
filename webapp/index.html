@@ -46,12 +46,12 @@
 	<table id="medical_record" class="display dataTable table table-bordered datatable stripe compact" cellspacing="0" width="100%">
 		<thead>
 			<tr>
-				<th>PatientId</th>
+				<th class="id">PatientId</th>
 				<th>AppointmentID</th>
-				<th>Gender</th>
+				<th class="gender">Gender</th>
 				<th>ScheduledDay</th>
 				<th>AppointmentDay</th>
-				<th>Age</th>
+				<th class="age">Age</th>
 				<th class="options">Option</th>
 			</tr>
 		</thead>
@@ -86,8 +86,10 @@ function search_from_db()
 	$("#ct_devices_table").DataTable().ajax.url("/ajax/get_default_config.asp?devtype=CENTER");
 	$("#ct_devices_table").DataTable().ajax.reload();
 }
-function render_table_options()
+function render_table_options(row)
 {
+	// console.log(row);
+	pid = row.PatientId;
 	str = '<button type="button" class="btn btn-info" id="edit_patient_btn">Edit</button>';
 	str += '<button type="button" class="btn btn-error" id="del_patient_btn">Delete</button>';
 	return str;
@@ -110,12 +112,12 @@ jQuery( document ).ready(function($) {
 			{ data: "ScheduledDay"},
 			{ data: "AppointmentDay"},
 			{ data: "Age"},
-			{ data: null , defaultContent : ""}
+			{ data: null , defaultContent : "aa"}
 		],
 		columnDefs: [
 			{
 				render: function ( data, type, row ) {
-					return render_table_options();
+					return render_table_options(row);
 				},
 				targets: ["options"]
 			}
