@@ -43,6 +43,13 @@
 	<div id="patien_del">
 		
 	</div>
+
+	<div id="patient_clr_select">
+		<form>
+			<button type="button" class="btn btn-error" id="clr_select_btn">Clear Selected</button>
+		</form>
+	</div>
+
 	<table id="medical_record" class="display dataTable table table-bordered datatable stripe compact" cellspacing="0" width="100%">
 		<thead>
 			<tr>
@@ -106,6 +113,16 @@ function select_all_patient()
 		$("th.select-checkbox").addClass("selected");
 	}
 }
+function clear_selected_patient()
+{
+	if($("th.select-checkbox").hasClass("selected")) {
+		// If select all was selected then use select all click event for clear.
+		$("#select_all").click();
+	}else{
+		$("#medical_record").DataTable().rows().deselect();
+	}
+}
+
 jQuery( document ).ready(function($) {
 
 	// var sample_table = $("#medical_record").DataTable();
@@ -152,6 +169,11 @@ jQuery( document ).ready(function($) {
 	$('#select_all').click(function(){
 		// Check/uncheck all checkboxes in the table
 		select_all_patient();
+	});
+
+	// Handle click on "Clear Selected" button
+	$("#clr_select_btn").click(function(){
+		clear_selected_patient();
 	});
 
 	$("#add_patient_btn").click(function(){
