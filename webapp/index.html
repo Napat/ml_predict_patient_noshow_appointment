@@ -46,6 +46,7 @@
 	<table id="medical_record" class="display dataTable table table-bordered datatable stripe compact" cellspacing="0" width="100%">
 		<thead>
 			<tr>
+				<th><input id="select_all" type="checkbox" /></th>
 				<th class="id">PatientId</th>
 				<th>AppointmentID</th>
 				<th class="gender">Gender</th>
@@ -94,6 +95,17 @@ function render_table_options(row)
 	str += '<button type="button" class="btn btn-error" id="del_patient_btn">Delete</button>';
 	return str;
 }
+function select_all_patient()
+{
+
+	if($("th.select-checkbox").hasClass("selected")) {
+		$("#medical_record").DataTable().rows().deselect();
+		$("th.select-checkbox").removeClass("selected");
+	}else{
+		$("#medical_record").DataTable().rows().select();
+		$("th.select-checkbox").addClass("selected");
+	}
+}
 jQuery( document ).ready(function($) {
 
 	// var sample_table = $("#medical_record").DataTable();
@@ -106,6 +118,7 @@ jQuery( document ).ready(function($) {
 			dataSrc: "medical_data"
 		},
 		columns: [
+			{ data: null , defaultContent : ""},
 			{ data: "PatientId"},
 			{ data: "AppointmentID"},
 			{ data: "Gender"},
@@ -116,6 +129,11 @@ jQuery( document ).ready(function($) {
 		],
 		columnDefs: [
 			{
+				orderable: false,
+				className: 'select-checkbox',
+				targets: 0
+			},
+			{
 				render: function ( data, type, row ) {
 					return render_table_options(row);
 				},
@@ -125,7 +143,15 @@ jQuery( document ).ready(function($) {
 		responsive: false,
 		// lengthMenu: [[50, 100, -1], [50, 100,"All"]],
 		order: [[ 1, "desc" ]],
-		select: true,
+		select: {
+			style: 'multi'
+		}
+	});
+
+	// Handle click on "Select all" control
+	$('#select_all').click(function(){
+		// Check/uncheck all checkboxes in the table
+		select_all_patient();
 	});
 
 	$("#add_patient_btn").click(function(){
