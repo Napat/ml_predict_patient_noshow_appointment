@@ -79,6 +79,18 @@ function reload_patient()
 }
 function add_patient()
 {
+	//check null text field
+	if(document.getElementById('patient_id').value == "" ||
+		document.getElementById('appointment_id').value == "" ||
+		document.getElementById('gender').value == "" ||
+		document.getElementById('scheduled_day').value == "" ||
+		document.getElementById('appointment_day').value == "" ||
+		document.getElementById('age').value == "")
+	{
+		alert('PLEASE INPUT DATA');
+		return false;
+	}
+
 	var patient_id = $("#patient_id").val();
 	var appointment_id = $("#appointment_id").val();
 	var gender = $("#gender").val();
