@@ -151,7 +151,15 @@ function add_patient()
 	console.log("Debug appointment_day : " + appointment_day);
 	console.log("Debug age : " + age);
 
-	alert("Add button !!");
+	// add data to data table
+	$("#medical_record").DataTable().row.add({
+		"PatientId": patient_id,
+		"AppointmentID": appointment_id,
+		"Gender": gender,
+		"ScheduledDay": scheduled_day,
+		"AppointmentDay": appointment_day,
+		"Age": age
+	});
 
 	// add to db
 	
