@@ -79,11 +79,24 @@ function reload_patient()
 }
 function add_patient()
 {
-	alert("add");
+	var patient_id = $("#patient_id").val();
+	var appointment_id = $("#appointment_id").val();
+	var gender = $("#gender").val();
+	var scheduled_day = $("#scheduled_day").val();
+	var appointment_day = $("#appointment_day").val();
+	var age = $("#age").val();
 
-	$("#medical_record").DataTable().row.add();
+	console.log("Debug patient_id : " + patient_id);
+	console.log("Debug appointment_id : " + appointment_id);
+	console.log("Debug gender : " + gender);
+	console.log("Debug scheduled_day : " + scheduled_day);
+	console.log("Debug appointment_day : " + appointment_day);
+	console.log("Debug age : " + age);
+
+	alert("Add button !!");
 
 	// add to db
+	
 }
 function del_patient()
 {
