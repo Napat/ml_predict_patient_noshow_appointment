@@ -162,7 +162,19 @@ function add_patient()
 	});
 
 	// add to db
-	
+	$.post('add_patient.php',
+		{
+			patient_id: patient_id,
+			appointment_id: appointment_id,
+			gender: gender,
+			scheduled_day: scheduled_day,
+			appointment_day: appointment_day,
+			age: age
+		},
+		function(result) { 
+			alert(result); 
+		}
+	);
 }
 function del_patient()
 {
