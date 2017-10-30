@@ -176,9 +176,12 @@ function add_patient()
 		}
 	);
 }
-function del_patient()
+function del_patient(DeletedRow)
 {
-	$("#medical_record").DataTable().row.remove();
+	alert("Delete button : "); 
+	// $("#medical_record").DataTable().row.remove();
+	$('#medical_record').DataTable().row(DeletedRow).remove().draw();
+	// $(this).parent().parent().remove();
 
 	// del from db
 }
@@ -272,6 +275,18 @@ jQuery( document ).ready(function($) {
 	$("#add_patient_btn").click(function(){
 		add_patient();
 	});
+
+	$('#medical_record tbody').on( 'click', 'button', function () {
+		// var data = sample_table.row( $(this).parents('tr') ).data();
+		var button_id = this.id;
+		if (button_id=='del_patient_btn'){
+			del_patient($(this).parents('tr'));
+			// $(this).parent().parent().remove();
+		}else if (button_id=='edit_patient_btn'){
+			alert("Edit not implement!!"); 
+		}
+    } );
+
 
 });
 </script>
