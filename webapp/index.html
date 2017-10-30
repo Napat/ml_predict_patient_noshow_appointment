@@ -176,14 +176,21 @@ function add_patient()
 		}
 	);
 }
-function del_patient(DeletedRow)
+function del_patient(DeletedRow, patient_id)
 {
-	alert("Delete button : "); 
+	alert("Delete button ID : "+ patient_id); 
 	// $("#medical_record").DataTable().row.remove();
 	$('#medical_record').DataTable().row(DeletedRow).remove().draw();
-	// $(this).parent().parent().remove();
 
 	// del from db
+	$.post('del_patient.php',
+		{
+			patient_id: patient_id
+		},
+		function(result) { 
+			alert(result); 
+		}
+	);
 }
 function search_from_db()
 {
@@ -277,10 +284,10 @@ jQuery( document ).ready(function($) {
 	});
 
 	$('#medical_record tbody').on( 'click', 'button', function () {
-		// var data = sample_table.row( $(this).parents('tr') ).data();
+		var data = sample_table.row( $(this).parents('tr') ).data();
 		var button_id = this.id;
 		if (button_id=='del_patient_btn'){
-			del_patient($(this).parents('tr'));
+			del_patient($(this).parents('tr'), data.PatientId);
 			// $(this).parent().parent().remove();
 		}else if (button_id=='edit_patient_btn'){
 			alert("Edit not implement!!"); 
