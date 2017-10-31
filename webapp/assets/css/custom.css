@@ -465,8 +465,3 @@ border-radius: 50%;
 .modal-open .modal {
 	overflow: scroll;
 }
-
-
-#medical_record tfoot {
-	display: table-header-group;
-}
