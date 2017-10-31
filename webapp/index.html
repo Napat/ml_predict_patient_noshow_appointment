@@ -137,6 +137,7 @@
 				</div>
 				<div class="modal-footer">
 				  <button type="button" class="btn btn-success btn-default" data-dismiss="modal" id="edit_patient_APPLY_btn"></span>Apply</button>
+				  <button type="button" class="btn btn-success btn-default" data-dismiss="modal" id="edit_patient_SAVE_btn"></span>Save to DB</button>
 				  <input type="hidden" id="rowId" value="-">
 				</div>
 			</div>
@@ -283,7 +284,7 @@ function edit_patient(rowData)
 	editingDataObj = rowData;
 }
 
-/*  Function call after click on "Appyly" button in Editing Modal to save edited data to datatables
+/*  Function call after click on "Apply" button in Editing Modal to save edited data to datatables
 *	
 *	-
 */
@@ -293,9 +294,6 @@ function apply_edit_patient()
 	var rowData = sample_table.row( '.editing' );
 	// Get row id
 	var rowid = editingDataObj.ID;
-	
-    //console.log( rowData );
-    //console.log( $('#appointmentid_Fld').val() );
 	
 	// Update data in 'PatientId' field If it changed
 	if($('#patientid_Fld').val() != rowData.data().PatientId) {
@@ -332,7 +330,68 @@ function apply_edit_patient()
 		rowData.data().Age = $('#age_Fld').val();
 		console.log( 'Edit Age : ' + rowData.data().Age );
 		sample_table.row(rowData).data(rowData.data()).draw();
+	
 	}
+}
+
+/*  Function call after click on "Save" button in Editing Modal to save edited data to database
+*	
+*	-
+*/
+function save_edit_patient()
+{
+	// Get object data from current row
+	var rowData = sample_table.row( '.editing' );
+	
+	// Get row id
+	var rowid = editingDataObj.ID;
+	
+	// Update data in 'PatientId' field If it changed
+	if($('#patientid_Fld').val() != rowData.data().PatientId) {
+		update_data_to_DB(rowid, 'PatientId', $('#patientid_Fld').val())
+	}
+	// Update data in 'AppointmentID' field If it changed
+	if($('#appointmentid_Fld').val() != rowData.data().AppointmentID) {
+		update_data_to_DB(rowid, 'AppointmentID', $('#appointmentid_Fld').val())
+	}
+	// Update data in 'Gender' field If it changed
+	if($('#gender_Fld').val() != rowData.data().Gender) {
+		update_data_to_DB(rowid, 'Gender', $('#gender_Fld').val())
+	}
+	// Update data in 'ScheduledDay' field If it changed
+	if($('#scheduledday_Fld').val() != rowData.data().ScheduledDay) {
+		update_data_to_DB(rowid, 'ScheduledDay', $('#scheduledday_Fld').val())
+	}
+	// Update data in 'AppointmentDay' field If it changed
+	if($('#appointmentday_Fld').val() != rowData.data().AppointmentDay) {
+		update_data_to_DB(rowid, 'AppointmentDay', $('#appointmentday_Fld').val())
+	}
+	// Update data in 'Age' field If it changed
+	if($('#age_Fld').val() != rowData.data().Age) {
+		update_data_to_DB(rowid, 'Age', $('#age_Fld').val())
+	}
+	// Wait for a second and reload datatable
+	//setTimeout(function(){
+	//	alert('F');
+	//}, 10);sample_table.ajax.reload();
+	
+}
+function ttFunc() {
+    sample_table.ajax.reload();
+}
+// update data on Database
+function update_data_to_DB(rowid, columnName, columnValue)
+{
+	$.post('edit_patient.php',
+		{
+			rowid: rowid,
+			columnName: columnName,
+			columnValue: columnValue
+		},
+		function(result) { 
+			alert(result); 
+		}
+	);
 }
 
 function render_table_options(row)
@@ -467,6 +526,11 @@ jQuery( document ).ready(function($) {
 	// Event on click Save button in Edit patient Modal
 	$("#edit_patient_APPLY_btn").click(function(){
 		apply_edit_patient();
+	} );
+	
+	// Event on click Save button in Edit patient Modal
+	$("#edit_patient_SAVE_btn").click(function(){
+		save_edit_patient();
 	} );
 
 	$('#medical_record tbody').on( 'click', 'button', function () {
