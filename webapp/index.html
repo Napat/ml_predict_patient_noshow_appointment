@@ -61,8 +61,58 @@
 			</tr>
 		</tbody>
 	</table>
+	
+	<!-- Editing Modal -->
+	<div class="modal fade" id="rowEdit" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header" style="padding:10px 15px;">
+				  <button type="button" class="close" data-dismiss="modal">&times;</button>
+				  <h4>Patient Info</h4>
+				</div>
+				<div class="modal-body" style="padding:20px;">
+				  <form role="form">
+					<div class="form-group">
+					  <label for="patientid_Fld">PatientId</label>
+					  <input type="text" class="form-control" id="patientid_Fld" placeholder="Enter PatientId">
+					</div>
+					<div class="form-group">
+					  <label for="appointmentid_Fld">AppointmentID</label>
+					  <input type="text" class="form-control" id="appointmentid_Fld" placeholder="Enter AppointmentID">
+					</div>
+					<div class="form-group">
+					  <label for="gender_Fld">Gender</label>
+					  <input type="text" class="form-control" id="gender_Fld" placeholder="Enter Gender">
+					</div>
+					<div class="form-group">
+					  <label for="scheduledday_Fld">ScheduledDay</label>
+					  <input type="text" class="form-control" id="scheduledday_Fld" placeholder="Enter ScheduledDay">
+					</div>
+					<div class="form-group">
+					  <label for="appointmentday_Fld">AppointmentDay</label>
+					  <input type="text" class="form-control" id="appointmentday_Fld" placeholder="Enter AppointmentDay">
+					</div>
+					<div class="form-group">
+					  <label for="age_Fld">Age</label>
+					  <input type="text" class="form-control" id="age_Fld" placeholder="Enter Age">
+					</div>
+				  </form>
+				</div>
+				<div class="modal-footer">
+				  <button type="button" class="btn btn-success btn-default" data-dismiss="modal" id="edit_patient_APPLY_btn"></span>Apply</button>
+				  <input type="hidden" id="rowId" value="-">
+				</div>
+			</div>
+
+		</div>
+	</div>
 </body>
 <script type="text/javascript">
+
+var patientInfotable; // Object for datatable of patien information
+var editingDataObj; // Object for data editing in Modal
+
 function reload_patient()
 {
 	$("#medical_record").DataTable().ajax.reload();
@@ -86,19 +136,96 @@ function search_from_db()
 	$("#ct_devices_table").DataTable().ajax.url("/ajax/get_default_config.asp?devtype=CENTER");
 	$("#ct_devices_table").DataTable().ajax.reload();
 }
+
+/*  Function call after click on "Edit" button to add current selected data to Modal
+*	
+*	rowData: Row object contained each row data
+*/
+function edit_patient(rowData)
+{
+    //console.log( patientInfotable.row( '.selected' ).data() );
+	// Show modal
+	$('#rowEdit').modal();
+	
+	// Add current data to edit modal
+	$('#patientid_Fld').val(rowData.PatientId);
+	$('#appointmentid_Fld').val(rowData.AppointmentID);
+	$('#gender_Fld').val(rowData.Gender);
+	$('#scheduledday_Fld').val(rowData.ScheduledDay);
+	$('#appointmentday_Fld').val(rowData.AppointmentDay);
+	$('#age_Fld').val(rowData.Age);
+	$('#rowId').val(rowData.ID);
+	editingDataObj = rowData;
+}
+
+
+/*  Function call after click on "Appyly" button in Editing Modal to save edited data to datatables
+*	
+*	-
+*/
+function apply_edit_patient()
+{
+	// Get object data from current row
+	var rowData = patientInfotable.row( '.editing' );
+	// Get row id
+	var rowid = editingDataObj.ID;
+	
+    //console.log( rowData );
+    //console.log( $('#appointmentid_Fld').val() );
+	
+	// Update data in 'PatientId' field If it changed
+	if($('#patientid_Fld').val() != rowData.data().PatientId) {
+		rowData.data().PatientId = $('#patientid_Fld').val();
+		console.log( 'Edit PatientId : ' + rowData.data().PatientId );
+		patientInfotable.row(rowData).data(rowData.data()).draw();
+	}
+	// Update data in 'AppointmentID' field If it changed
+	if($('#appointmentid_Fld').val() != rowData.data().AppointmentID) {
+		rowData.data().AppointmentID = $('#appointmentid_Fld').val();
+		console.log( 'Edit AppointmentID : ' + rowData.data().AppointmentID );
+		patientInfotable.row(rowData).data(rowData.data()).draw();
+	}
+	// Update data in 'Gender' field If it changed
+	if($('#gender_Fld').val() != rowData.data().Gender) {
+		rowData.data().Gender = $('#gender_Fld').val();
+		console.log( 'Edit Gender : ' + rowData.data().Gender );
+		patientInfotable.row(rowData).data(rowData.data()).draw();
+	}
+	// Update data in 'ScheduledDay' field If it changed
+	if($('#scheduledday_Fld').val() != rowData.data().ScheduledDay) {
+		rowData.data().ScheduledDay = $('#scheduledday_Fld').val();
+		console.log( 'Edit ScheduledDay : ' + rowData.data().ScheduledDay );
+		patientInfotable.row(rowData).data(rowData.data()).draw();
+	}
+	// Update data in 'AppointmentDay' field If it changed
+	if($('#appointmentday_Fld').val() != rowData.data().AppointmentDay) {
+		rowData.data().AppointmentDay = $('#appointmentday_Fld').val();
+		console.log( 'Edit AppointmentDay : ' + rowData.data().AppointmentDay );
+		patientInfotable.row(rowData).data(rowData.data()).draw();
+	}
+	// Update data in 'Age' field If it changed
+	if($('#age_Fld').val() != rowData.data().Age) {
+		rowData.data().Age = $('#age_Fld').val();
+		console.log( 'Edit Age : ' + rowData.data().Age );
+		patientInfotable.row(rowData).data(rowData.data()).draw();
+	}
+}
+
 function render_table_options()
 {
 	str = '<button type="button" class="btn btn-info" id="edit_patient_btn">Edit</button>';
 	str += '<button type="button" class="btn btn-error" id="del_patient_btn">Delete</button>';
 	return str;
 }
+
+
 jQuery( document ).ready(function($) {
 
-	// var sample_table = $("#medical_record").DataTable();
+	// var patientInfotable = $("#medical_record").DataTable();
 
 
 
-	var sample_table = $("#medical_record").DataTable({
+	patientInfotable = $("#medical_record").DataTable({
 		ajax: {
 			url : "data.php", 
 			dataSrc: "medical_data"
@@ -129,6 +256,34 @@ jQuery( document ).ready(function($) {
 	$("#add_patient_btn").click(function(){
 		add_patient();
 	});
+	
+	// Event on click Edit patient buttons
+	$('#medical_record tbody').on( 'click', '#edit_patient_btn', function () {
+		// Get Row obj
+		var currentRow = $(this).parents('tr');
+		
+		// Remove old editing row and Add Select the new row to edit
+        if (! currentRow.hasClass('editing') ) {
+            patientInfotable.$('tr.editing').removeClass('editing');
+            currentRow.addClass('editing');
+        }
+		// Get selected row data
+		var currentRowData = patientInfotable.row( currentRow ).data();
+		
+		// Edit data Modal appear
+		edit_patient(currentRowData);
+	} );
+	
+	// Event after close Modal
+	$('#rowEdit').on('hidden.bs.modal', function (e) {
+		patientInfotable.$('tr.editing').removeClass('editing');
+        //console.log("ModalClose");
+	})
+	
+	// Event on click Save button in Edit patient Modal
+	$("#edit_patient_APPLY_btn").click(function(){
+		apply_edit_patient();
+	} );
 
 });
 </script>
