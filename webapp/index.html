@@ -226,6 +226,21 @@ function clear_selected_patient()
 		$("#medical_record").DataTable().rows().deselect();
 	}
 }
+function del_db_selected_patient()
+{
+	for (var i = 0; i < $("#medical_record").DataTable().rows('.selected').data().length; i++) { 
+		console.log( $("#medical_record").DataTable().rows('.selected').data()[i].PatientId);
+		// del from db
+		$.post('del_selected_patient.php',
+			{
+				patient_id: $("#medical_record").DataTable().rows('.selected').data()[i].PatientId
+			}
+		);
+	}
+
+	$("#medical_record").DataTable().rows('.selected').remove().draw( false );
+
+}
 
 jQuery( document ).ready(function($) {
 
@@ -281,7 +296,7 @@ jQuery( document ).ready(function($) {
 	});
 
 	$('#del_select_btn').click( function () {
-		$("#medical_record").DataTable().rows('.selected').remove().draw( false );
+		del_db_selected_patient();
 	} );
 
 	$("#add_patient_btn").click(function(){
