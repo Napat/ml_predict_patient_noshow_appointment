@@ -1,0 +1,9 @@
+/**
+ *
+ * CSS
+ *
+*/
+
+#medical_record tfoot {
+	display: table-header-group;
+}
