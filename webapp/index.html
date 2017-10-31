@@ -20,18 +20,32 @@
 	<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js" ></script>
 	<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js" > </script>
 	<script src="https://cdn.datatables.net/select/1.2.3/js/dataTables.select.min.js" > </script>	
+
+	<!-- timepicker -->
+	<link rel="stylesheet" media="all" type="text/css" href="assets/css/timepicker/jquery-ui.css" />
+	<link rel="stylesheet" media="all" type="text/css" href="assets/css/timepicker/jquery-ui-timepicker-addon.css" />
+
+<!-- 	<script type="text/javascript" src="jquery-1.10.2.min.js"></script> -->
+	<script type="text/javascript" src="assets/js/timepicker/jquery-ui.min.js"></script>
+
+	<script type="text/javascript" src="assets/js/timepicker/jquery-ui-timepicker-addon.min.js"></script>
+	<script type="text/javascript" src="assets/js/timepicker/jquery-ui-sliderAccess.js"></script>
+	<!-- end timepicker -->
+
 </head>
 <body>
 	<div id="patien_add">
 		<form>
-
-			<input type="number" name="patient_id" id="patient_id">
-			<input type="number" name="appointment_id" id="appointment_id">
-			<input type="text" name="gender" id="gender">
-			<input type="text" name="scheduled_day" id="scheduled_day">
-			<input type="text" name="appointment_day" id="appointment_day">
-			<input type="number" name="age" id="age">
-			<button type="button" class="btn btn-info" id="add_patient_btn">Add</button>
+			<br>
+				<b>Add Patient Data:</b></br>
+				<input type="number" name="patient_id" id="patient_id" placeholder="Patient ID" min="0" onkeypress="return isNumberKey(event)">
+				<input type="number" name="appointment_id" id="appointment_id" placeholder="Appointment ID" min="0" onkeypress="return isNumberKey(event)">
+				<input type="text" name="gender" id="gender" placeholder="Gender" maxlength="1" style="text-transform: uppercase" onkeypress="return isTextKey(event)">
+				<input type="text" name="scheduled_day" id="scheduled_day" placeholder="Scheduled Day" readonly='true'>
+				<input type="text" name="appointment_day" id="appointment_day" placeholder="Appointment Day" readonly='true'>
+				<input type="number" name="age" id="age" placeholder="Age." min="0" onkeypress="return isNumberKey(event)">
+				<button type="button" class="btn btn-info" id="add_patient_btn">Add</button>
+			</br></br>
 		</form>
 		
 
@@ -71,23 +85,112 @@
 	</table>
 </body>
 <script type="text/javascript">
+
+function isNumberKey(evt){
+	var charCode = (evt.which) ? evt.which : event.keyCode
+	if (charCode > 31 && (charCode < 48 || charCode > 57))
+		return false;
+	return true;
+}
+
+function isTextKey(evt)
+{
+	var charCode = (evt.which) ? evt.which : event.keyCode
+	if (charCode > 31 && ((charCode < 65 || charCode > 90) && (charCode < 97 || charCode > 122)))
+		return false;
+	return true;
+}
+
+$(function(){
+	$("#scheduled_day").datetimepicker({
+		dateFormat: "yy-m-ddT",
+		timeFormat: "HH:mm:ssZ",
+		separator: ''
+	});
+	$("#appointment_day").datetimepicker({
+		dateFormat: "dd-m-yyT",
+		timeFormat: "HH:mm:ssZ",
+		separator: ''
+	});
+});
+
+// no space
+$("input").on("keydown", function (e) {
+	return e.which !== 32;
+});
+
 function reload_patient()
 {
 	$("#medical_record").DataTable().ajax.reload();
 }
 function add_patient()
 {
-	alert("add");
+	//check null text field
+	if(document.getElementById('patient_id').value == "" ||
+		document.getElementById('appointment_id').value == "" ||
+		document.getElementById('gender').value == "" ||
+		document.getElementById('scheduled_day').value == "" ||
+		document.getElementById('appointment_day').value == "" ||
+		document.getElementById('age').value == "")
+	{
+		alert('PLEASE INPUT DATA');
+		return false;
+	}
 
-	$("#medical_record").DataTable().row.add();
+	var patient_id = $("#patient_id").val();
+	var appointment_id = $("#appointment_id").val();
+	var gender = $("#gender").val().toUpperCase();
+	var scheduled_day = $("#scheduled_day").val();
+	var appointment_day = $("#appointment_day").val();
+	var age = $("#age").val();
+
+	console.log("Debug patient_id : " + patient_id);
+	console.log("Debug appointment_id : " + appointment_id);
+	console.log("Debug gender : " + gender);
+	console.log("Debug scheduled_day : " + scheduled_day);
+	console.log("Debug appointment_day : " + appointment_day);
+	console.log("Debug age : " + age);
+
+	// add data to data table
+	$("#medical_record").DataTable().row.add({
+		"PatientId": patient_id,
+		"AppointmentID": appointment_id,
+		"Gender": gender,
+		"ScheduledDay": scheduled_day,
+		"AppointmentDay": appointment_day,
+		"Age": age
+	});
 
 	// add to db
+	$.post('add_patient.php',
+		{
+			patient_id: patient_id,
+			appointment_id: appointment_id,
+			gender: gender,
+			scheduled_day: scheduled_day,
+			appointment_day: appointment_day,
+			age: age
+		},
+		function(result) { 
+			alert(result); 
+		}
+	);
 }
-function del_patient()
+function del_patient(DeletedRow, patient_id)
 {
-	$("#medical_record").DataTable().row.remove();
+	alert("Delete button ID : "+ patient_id); 
+	// $("#medical_record").DataTable().row.remove();
+	$('#medical_record').DataTable().row(DeletedRow).remove().draw();
 
 	// del from db
+	$.post('del_patient.php',
+		{
+			patient_id: patient_id
+		},
+		function(result) { 
+			alert(result); 
+		}
+	);
 }
 function search_from_db()
 {
@@ -179,6 +282,18 @@ jQuery( document ).ready(function($) {
 	$("#add_patient_btn").click(function(){
 		add_patient();
 	});
+
+	$('#medical_record tbody').on( 'click', 'button', function () {
+		var data = sample_table.row( $(this).parents('tr') ).data();
+		var button_id = this.id;
+		if (button_id=='del_patient_btn'){
+			del_patient($(this).parents('tr'), data.PatientId);
+			// $(this).parent().parent().remove();
+		}else if (button_id=='edit_patient_btn'){
+			alert("Edit not implement!!"); 
+		}
+    } );
+
 
 });
 </script>
