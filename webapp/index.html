@@ -234,7 +234,7 @@ function add_patient()
 	});
 
 	// add to db
-	$.post('add_patient.php',
+	$.post('db_access/add_patient.php',
 		{
 			patient_id: patient_id,
 			appointment_id: appointment_id,
@@ -255,7 +255,7 @@ function del_patient(DeletedRow, patient_id)
 	$('#medical_record').DataTable().row(DeletedRow).remove().draw();
 
 	// del from db
-	$.post('del_patient.php',
+	$.post('db_access/del_patient.php',
 		{
 			patient_id: patient_id
 		},
@@ -390,7 +390,7 @@ function ttFunc() {
 // update data on Database
 function update_data_to_DB(rowid, columnName, columnValue)
 {
-	$.post('edit_patient.php',
+	$.post('db_access/edit_patient.php',
 		{
 			rowid: rowid,
 			columnName: columnName,
@@ -436,7 +436,7 @@ function del_db_selected_patient()
 	for (var i = 0; i < $("#medical_record").DataTable().rows('.selected').data().length; i++) { 
 		console.log( $("#medical_record").DataTable().rows('.selected').data()[i].PatientId);
 		// del from db
-		$.post('del_selected_patient.php',
+		$.post('db_access/del_selected_patient.php',
 			{
 				patient_id: $("#medical_record").DataTable().rows('.selected').data()[i].PatientId
 			}
@@ -461,7 +461,7 @@ jQuery( document ).ready(function($) {
 
 	sample_table = $("#medical_record").DataTable({
 		ajax: {
-			url : "data.php", 
+			url : "db_access/data.php", 
 			dataSrc: "medical_data",
 			type: "POST",
 			data : function( dataparam ) {
